@@ -1,0 +1,300 @@
+<html>
+	<style>
+	
+.inicial {
+		 background: grey;
+		 background-image: url("vacio.png");
+		 border: 2px solid blue;
+		 width: 100px;
+		 height: 100px;
+		 
+		}
+.equis1 {
+		 background: grey;
+		 border: 2px solid blue;
+		 width: 100px;
+		 height: 100px;
+		 float:left;
+		animation-name: girar_equis;
+    	animation-duration: 1s;
+		/*-moz-animation: girar 5s infinite; /* Firefox */
+		/*-webkit-animation: girar 5s infinite; /* Safari and Chrome */
+		/*-o-animation: girar 5s infinite; /* para cuando ópera... */
+		/*-ms-animation: girar 5s infinite; /* para cuando ie... */
+		}        		
+.equis2 {
+		 background: grey;
+		 background-image: url("equis.png");
+		 border: 2px solid blue;
+		 width: 100px;
+		 height: 100px;
+		 float:left;
+		 
+		}
+
+
+.cero1 {
+		 background: grey;
+		 border: 2px solid blue;
+		 width: 100px;
+		 height: 100px;
+		 float:left;
+		animation-name: girar_cero;
+    	animation-duration: 1s;
+		/*-moz-animation: girar 5s infinite; /* Firefox */
+		/*-webkit-animation: girar 5s infinite; /* Safari and Chrome */
+		/*-o-animation: girar 5s infinite; /* para cuando ópera... */
+		/*-ms-animation: girar 5s infinite; /* para cuando ie... */
+		}        		
+.cero2 {
+		 background: grey;
+		 background-image: url("cero.png");
+		 border: 2px solid blue;
+		 width: 100px;
+		 height: 100px;
+		 float:left;
+		 
+		}
+	 @keyframes girar_equis {
+	    0% {
+	      left: 0%;
+	      transform: rotateY(0deg);
+	    }
+	    100% {
+	      left: 100%;
+	      background-image: url("equis.png");
+	      transform: rotateY(720deg);
+	    }
+	  }
+	 @keyframes girar_cero {
+	    0% {
+	      left: 0%;
+	      transform: rotateY(0deg);
+	    }
+	    100% {
+	      left: 100%;
+	      background-image: url("cero.png");
+	      transform: rotateY(720deg);
+	    }
+	  }
+	.casilla{
+		 background: grey;
+		 background-image: url("vacio.png");
+		 border: 2px solid blue;
+		 width: 100px;
+		 height: 100px;
+		 float:left;
+		}
+	.retorno
+	{
+		clear: left;
+	}
+
+	</style>
+	<script type="text/javascript" src='jquery.js'></script>
+	<script type="text/javascript">
+			window.P = [];
+			window.P[1] = [[false,false,false],[false,false,false],[false,false,false]];
+			window.P[2] = [[false,false,false],[false,false,false],[false,false,false]];
+			window.JP = window.P[1];
+			window.turno = false;
+			
+			window.clases = ['','equis','cero'];
+			window.clase = window.clases[1];
+			window.id_j=0;
+			function validar(obj,casilla)
+			{
+
+			  	if(window.turno)
+			  	{	window.clase = window.clases[window.id_j];
+					window.JP[obj.fila][obj.col] = true;
+					$.post("escribir.php",{id_g:window.id_g,id_j:window.id_j,col:obj.col,fila:obj.fila},function(){},'json');
+					for(i=0;i<3;i++)
+					{
+
+						if(window.JP[i][0] && window.JP[i][1] && window.JP[i][2])
+						{
+							document.getElementById('lbTurno').innerHTML = "Terminado";	
+						}
+						
+						if(window.JP[0][i] && window.JP[1][i] && window.JP[2][i])
+						{
+							document.getElementById('lbTurno').innerHTML = "Terminado";	
+						}
+						
+						
+					}
+					if(window.JP[0][0] && window.JP[1][1] && window.JP[2][2])
+					{
+						document.getElementById('lbTurno').innerHTML = "Terminado";	
+					}
+
+					if(window.JP[2][0] && window.JP[1][1] && window.JP[0][2])
+					{
+						document.getElementById('lbTurno').innerHTML = "Terminado";	
+					}
+
+					if(obj.col == 0)		
+						casilla.className=window.clase+'1 retorno';
+					else
+						casilla.className=window.clase+'1';
+				window.turno = false;
+				}
+			}
+
+			function validar2(obj,casilla)
+			{
+
+			  	
+					window.JP[obj.fila][obj.col] = true;
+					
+					for(i=0;i<3;i++)
+					{
+
+						if(window.JP[i][0] && window.JP[i][1] && window.JP[i][2])
+						{
+							alert('term');
+						}
+						
+						if(window.JP[0][i] && window.JP[1][i] && window.JP[2][i])
+						{
+							alert('term');
+						}
+						
+						
+					}
+					if(window.JP[0][0] && window.JP[1][1] && window.JP[2][2])
+					{
+						alert('term');
+					}
+
+					if(window.JP[2][0] && window.JP[1][1] && window.JP[0][2])
+					{
+						alert('term');
+					}
+
+					if(obj.col == 0)		
+						casilla.className=window.clase+'1 retorno';
+					else
+						casilla.className=window.clase+'1';
+				
+			}
+
+
+
+			function callbackDatos(data)
+			{
+
+						window.tEsperando = setInterval(esperandoUsuario2,5000);	
+						//alert('callbackDatos');
+						
+			}
+			
+			function iniciar()
+			{
+
+					/** /$.post("escribir.php",{id_g:'1003',id_j:window.id_j,col:-1,fila:-1},
+								function(data){
+
+									//window.tEsperando = setInterval(esperandoUsuario2,1000);	
+									alert("esperandoUsuario2");
+								},
+								'json');/**/
+
+				$.post("server.php",{peticion:'1'},function(data){
+
+						//alert(data.users + ' ' + data.id_g);
+						document.getElementById('btnIniciar').disabled = true;	
+						window.clase = window.clases[data.users];
+						window.id_j	 = data.users;
+						window.id_g  = data.id_g;
+						
+						if(window.id_j==1)
+						{
+							
+							$.post("escribir.php",{id_g:window.id_g,id_j:window.id_j,col:-1,fila:-1},callbackDatos,'json');
+
+						}
+						else
+						{
+
+							$.post("escribir.php",{id_g:window.id_g,id_j:window.id_j,col:-1,fila:-1},callbackDatos2,'json');
+
+						}
+
+				},'json');				
+			}
+			function callbackDatos2()
+			{
+
+				setInterval(esperandoTurno,2000); 
+			}
+			function esperandoTurno()
+			{
+				$.post("leer.php",{id_g:window.id_g},function(data){
+
+						
+						if (window.id_j != data.id_j)
+						{
+							window.JP = window.P[2];
+							if((data.fila>-1) && (!window.JP[data.fila][data.col]) )
+							{
+								
+								window.clase = window.clases[data.id_j];						
+								
+								var idC = 'a'+data.fila+data.col;								
+								
+								validar2(data,document.getElementById(idC));
+
+							}
+							document.getElementById('lbTurno').innerHTML = "LISTO";	
+							
+							window.turno = true;
+							window.JP = window.P[1];
+						}
+						else
+						{
+							window.turno = false;
+						}
+
+				},'json');				
+			}
+			function esperandoUsuario2()
+			{
+				$.post("leer.php",{id_g:window.id_g},function(data){
+
+						//alert(data.users + ' ' + data.id_g);
+						if (window.id_j != data.id_j)
+						{
+							document.getElementById('lbInicio').innerHTML = "INICIADO";	
+							clearInterval(window.tEsperando);
+							setInterval(esperandoTurno,2000); 
+						}
+
+				},'json');				
+			}
+
+
+	</script>
+	<body>
+		 <DIV class="rueda0" id="ax11" onclick=";this.className='rueda1';" onanimationend="this.className='rueda2';" ></DIV>
+		 <button onclick="document.getElementById('a11').click();"> CLICK </button>
+
+
+		 <DIV class="casilla" id="a00" onclick="validar({fila:0,col:0},this);" onanimationend="this.className=window.clase+'2';" ></DIV>
+		 <DIV class="casilla" id="a01" onclick="validar({fila:0,col:1},this);" onanimationend="this.className=window.clase+'2';" ></DIV>
+		 <DIV class="casilla" id="a02" onclick="validar({fila:0,col:2},this);" onanimationend="this.className=window.clase+'2';" ></DIV>
+		 <DIV class="casilla retorno" id="a10" onclick="validar({fila:1,col:0},this);" onanimationend="this.className=window.clase+'2 retorno';" ></DIV>
+		 <DIV class="casilla" id="a11" onclick="validar({fila:1,col:1},this);" onanimationend="this.className=window.clase+'2';" ></DIV>
+		 <DIV class="casilla" id="a12" onclick="validar({fila:1,col:2},this);" onanimationend="this.className=window.clase+'2';" ></DIV>
+		 <DIV class="casilla retorno" id="20" onclick="validar({fila:2,col:0},this);" onanimationend="this.className=window.clase+'2 retorno';" ></DIV>
+		 <DIV class="casilla" id="21" onclick="validar({fila:2,col:1},this);" onanimationend="this.className=window.clase+'2';" ></DIV>
+		 <DIV class="casilla" id="22" onclick="validar({fila:2,col:2},this);" onanimationend="this.className=window.clase+'2';" ></DIV>
+
+		 <button id='btnIniciar' onclick="iniciar()"> Iniciar </button>
+		 <label id='lbInicio'></label>
+		 <label id='lbTurno'></label>
+
+
+	</body>
+</html>
